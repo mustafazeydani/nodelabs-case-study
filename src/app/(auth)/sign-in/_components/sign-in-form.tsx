@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useQueryClient } from '@tanstack/react-query';
 import { Loader2 } from 'lucide-react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
@@ -21,10 +22,12 @@ import { Input } from '@/components/ui/input';
 import { paths } from '@/config/paths';
 
 import {
+  getGetUsersProfileQueryKey,
   PostUsersLoginMutationBody,
   usePostUsersLogin,
 } from '@/api/generated/react-query/user';
 import { postUsersLoginBody } from '@/api/generated/zod/user.zod';
+import { useSetSessionCookie } from '@/api/internal/auth';
 
 export const SignInForm = () => {
   const form = useForm({
@@ -34,12 +37,29 @@ export const SignInForm = () => {
       password: '',
     },
   });
+  const queryClient = useQueryClient();
 
-  const { mutate, isPending } = usePostUsersLogin({
+  const { mutate: setSessionCookie, isPending: isSettingSessionCookie } =
+    useSetSessionCookie({
+      mutation: {
+        onError(error) {
+          toast.error(
+            error.response?.data?.message ||
+              error.message ||
+              'An error occurred while setting session cookie.',
+          );
+        },
+      },
+    });
+
+  const { mutate: login, isPending: isLoggingIn } = usePostUsersLogin({
     mutation: {
       onSuccess(data) {
-        console.log('Sign in successful:', data);
+        queryClient.setQueryData(getGetUsersProfileQueryKey(), data.data?.user);
+
         toast.success(data.message || 'Successfully signed in!');
+
+        setSessionCookie(data.data?.accessToken || '');
       },
       onError(error) {
         toast.error(
@@ -51,8 +71,10 @@ export const SignInForm = () => {
     },
   });
 
+  const isPending = isLoggingIn || isSettingSessionCookie;
+
   const onSubmit: SubmitHandler<PostUsersLoginMutationBody> = (data) => {
-    mutate({ data });
+    login({ data });
   };
 
   return (

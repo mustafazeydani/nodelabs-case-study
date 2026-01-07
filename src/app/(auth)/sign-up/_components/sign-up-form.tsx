@@ -3,9 +3,11 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { useRouter } from '@bprogress/next/app';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Loader2 } from 'lucide-react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import z from 'zod';
+import { toast } from 'react-toastify';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -19,16 +21,16 @@ import {
 import { Input } from '@/components/ui/input';
 import { paths } from '@/config/paths';
 
-const signUpFormSchema = z.object({
-  fullName: z.string(),
-  email: z.email(),
-  password: z.string(),
-});
-type SignUpFormValues = z.infer<typeof signUpFormSchema>;
+import {
+  PostUsersRegisterMutationBody,
+  usePostUsersRegister,
+} from '@/api/generated/react-query/user';
+import { postUsersRegisterBody } from '@/api/generated/zod/user.zod';
 
 export const SignUpForm = () => {
+  const router = useRouter();
   const form = useForm({
-    resolver: zodResolver(signUpFormSchema),
+    resolver: zodResolver(postUsersRegisterBody),
     defaultValues: {
       fullName: '',
       email: '',
@@ -36,8 +38,23 @@ export const SignUpForm = () => {
     },
   });
 
-  const onSubmit: SubmitHandler<SignUpFormValues> = (data) => {
-    console.log(data);
+  const { mutate, isPending } = usePostUsersRegister({
+    mutation: {
+      onSuccess(data) {
+        toast.success(data.message || 'Successfully signed up!');
+        router.replace(paths['/sign-in'].getHref());
+      },
+      onError(error) {
+        toast.error(
+          // error.response?.data?.message || // Errors not defined in the API docs
+          error.message || 'An error occurred during sign up.',
+        );
+      },
+    },
+  });
+
+  const onSubmit: SubmitHandler<PostUsersRegisterMutationBody> = (data) => {
+    mutate({ data });
   };
 
   return (
@@ -89,8 +106,17 @@ export const SignUpForm = () => {
           )}
         />
 
-        <Button type="submit" className="w-full">
-          Create Account
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={isPending}
+          aria-busy={isPending}
+        >
+          {isPending ? (
+            <Loader2 className="animate-spin text-inherit" />
+          ) : (
+            'Create Account'
+          )}
         </Button>
 
         <Button variant={'outline'} className="w-full">

@@ -1,30 +1,12 @@
 import { Xior, type XiorError, type XiorRequestConfig } from 'xior';
 
-const baseURL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || 'https://case.nodelabs.dev/api';
-
-/* -------------------- XIOR INSTANCE (EXTERNAL API) -------------------- */
-
-export const XIOR_INSTANCE = new Xior({
-  baseURL,
-});
-
 /* -------------------- XIOR INSTANCE (INTERNAL API ROUTES) -------------------- */
 
 export const XIOR_INTERNAL_INSTANCE = new Xior({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL
-    ? undefined
-    : 'http://localhost:3000',
+  baseURL: typeof window !== 'undefined' ? window.location.origin : '',
 });
 
 /* -------------------- REQUEST INTERCEPTOR -------------------- */
-
-XIOR_INSTANCE.interceptors.request.use(
-  (config) => {
-    return config;
-  },
-  (error) => Promise.reject(error),
-);
 
 XIOR_INTERNAL_INSTANCE.interceptors.request.use(
   (config) => {
@@ -35,27 +17,12 @@ XIOR_INTERNAL_INSTANCE.interceptors.request.use(
 
 /* -------------------- RESPONSE INTERCEPTOR -------------------- */
 
-XIOR_INSTANCE.interceptors.response.use(
-  (response) => response,
-  async (error) => Promise.reject(error),
-);
-
 XIOR_INTERNAL_INSTANCE.interceptors.response.use(
   (response) => response,
   async (error) => Promise.reject(error),
 );
 
-/* -------------------- CUSTOM INSTANCES -------------------- */
-
-export const customInstance = <T>(
-  config: XiorRequestConfig,
-  options?: XiorRequestConfig,
-): Promise<T> => {
-  return XIOR_INSTANCE.request({
-    ...config,
-    ...options,
-  }).then(({ data }) => data as T);
-};
+/* -------------------- CUSTOM INSTANCE -------------------- */
 
 export const customInternalInstance = <T>(
   config: XiorRequestConfig,
