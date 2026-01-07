@@ -4,8 +4,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Loader2 } from 'lucide-react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import z from 'zod';
+import { toast } from 'react-toastify';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -17,24 +18,41 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { paths } from '@/config/paths';
 
-const signInFormSchema = z.object({
-  email: z.email(),
-  password: z.string(),
-});
-type SignInFormValues = z.infer<typeof signInFormSchema>;
+import {
+  PostUsersLoginMutationBody,
+  usePostUsersLogin,
+} from '@/api/generated/react-query/user';
+import { postUsersLoginBody } from '@/api/generated/zod/user.zod';
 
 export const SignInForm = () => {
   const form = useForm({
-    resolver: zodResolver(signInFormSchema),
+    resolver: zodResolver(postUsersLoginBody),
     defaultValues: {
       email: '',
       password: '',
     },
   });
 
-  const onSubmit: SubmitHandler<SignInFormValues> = (data) => {
-    console.log(data);
+  const { mutate, isPending } = usePostUsersLogin({
+    mutation: {
+      onSuccess(data) {
+        console.log('Sign in successful:', data);
+        toast.success(data.message || 'Successfully signed in!');
+      },
+      onError(error) {
+        toast.error(
+          error.response?.data?.message ||
+            error.message ||
+            'An error occurred during sign in.',
+        );
+      },
+    },
+  });
+
+  const onSubmit: SubmitHandler<PostUsersLoginMutationBody> = (data) => {
+    mutate({ data });
   };
 
   return (
@@ -72,11 +90,20 @@ export const SignInForm = () => {
           )}
         />
 
-        <Button type="submit" className="w-full">
-          Sign In
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={isPending}
+          aria-busy={isPending}
+        >
+          {isPending ? (
+            <Loader2 className="animate-spin text-inherit" />
+          ) : (
+            'Sign In'
+          )}
         </Button>
 
-        <Button variant={'outline'} className="w-full">
+        <Button type="button" variant={'outline'} className="w-full">
           <Image
             src="/icons/google.svg"
             alt="Google"
@@ -90,7 +117,7 @@ export const SignInForm = () => {
         <p className="text-muted-foreground text-center text-sm">
           Don't have an account?{' '}
           <Link
-            href="/sign-up"
+            href={paths['/sign-up'].getHref()}
             className="text-foreground hover:text-foreground/70 relative cursor-pointer transition-colors"
           >
             <Image

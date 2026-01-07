@@ -17,6 +17,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { paths } from '@/config/paths';
 
 const signUpFormSchema = z.object({
   fullName: z.string(),
@@ -106,7 +107,7 @@ export const SignUpForm = () => {
         <p className="text-muted-foreground text-center text-sm">
           Already have an account?{' '}
           <Link
-            href="/sign-in"
+            href={paths['/sign-in'].getHref()}
             className="text-foreground hover:text-foreground/70 relative cursor-pointer transition-colors"
           >
             <Image
