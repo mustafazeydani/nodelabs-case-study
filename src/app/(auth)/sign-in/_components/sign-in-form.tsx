@@ -135,6 +135,7 @@ export const SignInForm = () => {
           )}
         </Button>
 
+        {/* Social login is not implemented */}
         <Button type="button" variant={'outline'} className="w-full">
           <Image
             src="/icons/google.svg"
@@ -149,7 +150,7 @@ export const SignInForm = () => {
         <p className="text-muted-foreground text-center text-sm">
           Don't have an account?{' '}
           <Link
-            href={paths['/sign-up'].getHref()}
+            href={paths['sign-up'].getHref()}
             className="text-foreground hover:text-foreground/70 relative cursor-pointer transition-colors"
           >
             <Image

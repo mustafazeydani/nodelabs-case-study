@@ -32,3 +32,26 @@ export const useSetSessionCookie = ({
     ...mutation,
   });
 };
+
+type LogoutSessionResponse = {
+  success: boolean;
+};
+
+const logoutSession = async (_void?: void): Promise<LogoutSessionResponse> => {
+  const res = await customInternalInstance<LogoutSessionResponse>({
+    url: '/api/auth/logout',
+    method: 'POST',
+  });
+  return res;
+};
+
+type LogoutSessionOptions = {
+  mutation?: MutationConfig<typeof logoutSession, XiorError>;
+};
+
+export const useLogoutSession = ({ mutation }: LogoutSessionOptions = {}) => {
+  return useMutation({
+    mutationFn: logoutSession,
+    ...mutation,
+  });
+};

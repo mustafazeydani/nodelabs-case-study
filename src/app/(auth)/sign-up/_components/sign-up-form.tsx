@@ -42,7 +42,7 @@ export const SignUpForm = () => {
     mutation: {
       onSuccess(data) {
         toast.success(data.message || 'Successfully signed up!');
-        router.replace(paths['/sign-in'].getHref());
+        router.replace(paths['sign-in'].getHref());
       },
       onError(error) {
         toast.error(
@@ -119,6 +119,7 @@ export const SignUpForm = () => {
           )}
         </Button>
 
+        {/* Social login is not implemented */}
         <Button variant={'outline'} className="w-full">
           <Image
             src="/icons/google.svg"
@@ -133,7 +134,7 @@ export const SignUpForm = () => {
         <p className="text-muted-foreground text-center text-sm">
           Already have an account?{' '}
           <Link
-            href={paths['/sign-in'].getHref()}
+            href={paths['sign-in'].getHref()}
             className="text-foreground hover:text-foreground/70 relative cursor-pointer transition-colors"
           >
             <Image

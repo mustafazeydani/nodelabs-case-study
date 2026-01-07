@@ -4,8 +4,7 @@ import { Kumbh_Sans } from 'next/font/google';
 
 import type { Metadata } from 'next';
 
-import { MainLayout } from '@/components/layouts/main-layout';
-import { AppProvider } from '@/components/providers/app-provider';
+import { AppProvider } from '@/components/app-provider';
 
 const kumbhSans = Kumbh_Sans({
   variable: '--font-kumbh-sans',
@@ -32,9 +31,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="Nodelabs Software" />
       </head>
       <body className={`${kumbhSans.variable} antialiased`}>
-        <AppProvider>
-          <MainLayout>{children}</MainLayout>
-        </AppProvider>
+        <AppProvider>{children}</AppProvider>
       </body>
     </html>
   );
