@@ -3,7 +3,7 @@ import { XiorError } from 'xior';
 
 import { MutationConfig } from '@/lib/react-query';
 
-import { customInternalInstance } from '../mutator/internal-custom-instance';
+import { customInternalInstance } from '../mutator/custom-instance';
 
 type SetSessionCookieResponse = {
   success: boolean;

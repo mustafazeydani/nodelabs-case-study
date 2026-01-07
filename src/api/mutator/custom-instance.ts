@@ -1,5 +1,7 @@
 import { Xior, type XiorError, type XiorRequestConfig } from 'xior';
 
+import { CONSTANTS } from '@/config/constants';
+
 const baseURL =
   process.env.NEXT_PUBLIC_API_BASE_URL || 'https://case.nodelabs.dev/api';
 
@@ -18,9 +20,19 @@ export const XIOR_INTERNAL_INSTANCE = new Xior({
 });
 
 /* -------------------- REQUEST INTERCEPTOR -------------------- */
-
 XIOR_INSTANCE.interceptors.request.use(
-  (config) => {
+  async (config) => {
+    if (typeof window === 'undefined') {
+      const cookies = await import('next/headers').then((mod) => mod.cookies());
+      const token = cookies.get(CONSTANTS.accessTokenCookieName)?.value;
+
+      if (token) {
+        if (!config.headers) {
+          config.headers = {};
+        }
+        config.headers['Authorization'] = `Bearer ${token}`;
+      }
+    }
     return config;
   },
   (error) => Promise.reject(error),
@@ -36,12 +48,12 @@ XIOR_INTERNAL_INSTANCE.interceptors.request.use(
 /* -------------------- RESPONSE INTERCEPTOR -------------------- */
 
 XIOR_INSTANCE.interceptors.response.use(
-  (response) => response,
+  (response) => response.data,
   async (error) => Promise.reject(error),
 );
 
 XIOR_INTERNAL_INSTANCE.interceptors.response.use(
-  (response) => response,
+  (response) => response.data,
   async (error) => Promise.reject(error),
 );
 

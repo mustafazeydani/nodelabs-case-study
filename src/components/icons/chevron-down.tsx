@@ -1,0 +1,16 @@
+type IconProps = React.SVGProps<SVGSVGElement>;
+
+export const ChevronDownIcon = ({
+  className = 'w-6 h-6 text-foreground',
+  ...props
+}: IconProps) => (
+  <svg
+    viewBox="0 0 10 6"
+    fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+    {...props}
+  >
+    <path d="M9.15082 0H4.7379H0.76413C0.0841302 0 -0.25587 0.821666 0.225797 1.30334L3.89499 4.97251C4.4829 5.56042 5.43915 5.56042 6.02707 4.97251L7.42248 3.57709L9.69624 1.30334C10.1708 0.821666 9.83082 0 9.15082 0Z" />
+  </svg>
+);

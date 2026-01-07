@@ -33,27 +33,27 @@ import { WalletIcon } from './icons/wallet';
 
 const items = [
   {
-    title: 'Dashboard',
+    title: paths['/'].label,
     url: paths['/'].getHref(),
     icon: HomeIcon,
   },
   {
-    title: 'Transactions',
+    title: paths['transactions'].label,
     url: paths['transactions'].getHref(),
     icon: TransactionsIcon,
   },
   {
-    title: 'Invoices',
+    title: paths['invoices'].label,
     url: paths['invoices'].getHref(),
     icon: InvoicesIcon,
   },
   {
-    title: 'My Wallets',
+    title: paths['my-wallets'].label,
     url: paths['my-wallets'].getHref(),
     icon: WalletIcon,
   },
   {
-    title: 'Settings',
+    title: paths['settings'].label,
     url: paths['settings'].getHref(),
     icon: SettingsIcon,
   },
@@ -61,7 +61,7 @@ const items = [
 
 const footerItems = [
   {
-    title: 'Help',
+    title: paths['help'].label,
     url: paths['help'].getHref(),
     icon: HelpIcon,
   },
