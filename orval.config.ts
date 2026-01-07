@@ -1,6 +1,8 @@
 import { defineConfig } from 'orval';
 
-const OPENAPI_URL = process.env.NEXT_PUBLIC_OPENAPI_URL ?? 'https://case.nodelabs.dev/api-docs/openapi.json';
+const OPENAPI_URL =
+  process.env.NEXT_PUBLIC_OPENAPI_URL ??
+  'https://case.nodelabs.dev/api-docs.json';
 
 export default defineConfig({
   nodelabsApi: {
@@ -16,10 +18,6 @@ export default defineConfig({
         mutator: {
           path: './src/api/mutator/custom-instance.ts',
           name: 'customInstance',
-        },
-        query: {
-          useInfinite: true,
-          useInfiniteQueryParam: 'page',
         },
       },
     },

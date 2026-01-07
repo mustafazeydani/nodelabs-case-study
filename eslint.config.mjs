@@ -39,6 +39,7 @@ const config = [
       "src/styles/*.css",
       ".next/*",
       "dist/*",
+      "src/api/generated/*",
     ],
   },
   {

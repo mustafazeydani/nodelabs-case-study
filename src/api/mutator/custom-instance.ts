@@ -1,38 +1,38 @@
-import { XiorError } from "xior";
+import { Xior, type XiorError, type XiorRequestConfig } from 'xior';
 
-const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://case.nodelabs.dev/api"
+const baseURL =
+  process.env.NEXT_PUBLIC_API_BASE_URL || 'https://case.nodelabs.dev/api';
 
-export const customInstance = async <T>(
-    url: string,
-    {
-        method,
-        params,
-        body,
-    }: {
-        method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
-        params?: any;
-        body?: BodyType<unknown>;
-        responseType?: string;
-    },
+/* -------------------- XIOR INSTANCE -------------------- */
+
+export const XIOR_INSTANCE = new Xior({
+  baseURL,
+});
+
+/* -------------------- REQUEST INTERCEPTOR -------------------- */
+
+XIOR_INSTANCE.interceptors.request.use(
+  (config) => {
+    return config;
+  },
+  (error) => Promise.reject(error),
+);
+
+XIOR_INSTANCE.interceptors.response.use(
+  (response) => response,
+  async (error) => Promise.reject(error),
+);
+
+export const customInstance = <T>(
+  config: XiorRequestConfig,
+  options?: XiorRequestConfig,
 ): Promise<T> => {
-    let targetUrl = `${baseURL}${url}`;
-
-    if (params) {
-        targetUrl += '?' + new URLSearchParams(params);
-    }
-
-    const response = await fetch(targetUrl, {
-        method,
-        body,
-    });
-
-    return response.json();
+  return XIOR_INSTANCE.request({
+    ...config,
+    ...options,
+  }).then(({ data }) => data as T);
 };
 
-export default customInstance;
+/* -------------------- ORVAL TYPES -------------------- */
 
-// In some case with react-query and swr you want to be able to override the return error type so you can also do it here like this
-export type ErrorType<Error> = XiorError<Error>;
-// In case you want to wrap the body type (optional)
-// (if the custom instance is processing data before sending it, like changing the case for example)
-export type BodyType<BodyData> = CamelCase<BodyType>;
+export type ErrorType<T> = XiorError<T>;
