@@ -28,6 +28,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <meta name="apple-mobile-web-app-title" content="Nodelabs Software" />
+      </head>
       <body className={`${kumbhSans.variable} antialiased`}>
         <AppProvider>
           <MainLayout>{children}</MainLayout>

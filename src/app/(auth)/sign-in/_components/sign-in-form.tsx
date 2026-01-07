@@ -44,7 +44,6 @@ export const SignInForm = () => {
       password: '',
     },
   });
-  const queryClient = useQueryClient();
 
   const { mutate: setSessionCookie, isPending: isSettingSessionCookie } =
     useSetSessionCookie({
@@ -62,6 +61,7 @@ export const SignInForm = () => {
       },
     });
 
+  const queryClient = useQueryClient();
   const { mutate: login, isPending: isLoggingIn } = usePostUsersLogin({
     mutation: {
       onSuccess(data) {

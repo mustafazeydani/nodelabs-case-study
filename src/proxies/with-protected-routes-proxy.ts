@@ -11,10 +11,13 @@ import { paths } from '@/config/paths';
 import { ProxyFactory } from './stack-proxies';
 
 // Routes that don't require authentication
-const PUBLIC_ROUTES = ['/sign-in', '/sign-up'];
+const PUBLIC_ROUTES = [
+  paths['/sign-in'].getHref(),
+  paths['/sign-up'].getHref(),
+];
 
 // Routes that redirect authenticated users away (auth pages)
-const AUTH_ROUTES = ['/sign-in', '/sign-up'];
+const AUTH_ROUTES = [paths['/sign-in'].getHref(), paths['/sign-up'].getHref()];
 
 export const withProtectedRoutesProxy: ProxyFactory = (next: NextProxy) => {
   return async (request: NextRequest, _next: NextFetchEvent) => {
