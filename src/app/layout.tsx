@@ -14,7 +14,10 @@ const kumbhSans = Kumbh_Sans({
 });
 
 export const metadata: Metadata = {
-  title: 'NodeLabs Case Study',
+  title: {
+    default: 'NodeLabs',
+    template: '%s | NodeLabs',
+  },
   description: 'A case study project for NodeLabs',
 };
 

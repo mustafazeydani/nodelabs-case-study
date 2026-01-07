@@ -3,9 +3,11 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { useRouter } from '@bprogress/next/app';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
 import { Loader2 } from 'lucide-react';
+import { useQueryStates } from 'nuqs';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
@@ -29,7 +31,12 @@ import {
 import { postUsersLoginBody } from '@/api/generated/zod/user.zod';
 import { useSetSessionCookie } from '@/api/internal/auth';
 
+import { signInSearchParams } from '../_utils/search-params';
+
 export const SignInForm = () => {
+  const router = useRouter();
+  const [searchParams] = useQueryStates(signInSearchParams);
+
   const form = useForm({
     resolver: zodResolver(postUsersLoginBody),
     defaultValues: {
@@ -42,6 +49,9 @@ export const SignInForm = () => {
   const { mutate: setSessionCookie, isPending: isSettingSessionCookie } =
     useSetSessionCookie({
       mutation: {
+        onSuccess() {
+          router.replace(searchParams.redirectTo || paths['/'].getHref());
+        },
         onError(error) {
           toast.error(
             error.response?.data?.message ||

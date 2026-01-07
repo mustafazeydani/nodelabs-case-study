@@ -1,8 +1,9 @@
 import { stackProxies } from './proxies/stack-proxies';
 import { withAuthProxy } from './proxies/with-auth-proxy';
 import { withHeadersProxy } from './proxies/with-headers-proxy';
+import { withProtectedRoutesProxy } from './proxies/with-protected-routes-proxy';
 
-const proxies = [withAuthProxy, withHeadersProxy];
+const proxies = [withProtectedRoutesProxy, withAuthProxy, withHeadersProxy];
 
 export default stackProxies(proxies);
 
