@@ -1,7 +1,6 @@
-import Image from 'next/image';
-
 import { ColumnDef } from '@tanstack/react-table';
 
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { formatCurrency, formatDate } from '@/lib/utils';
 
 import { RecentTransactionsTransactionsItem } from '@/api/generated/models';
@@ -14,12 +13,10 @@ export const columns: ColumnDef<RecentTransactionsTransactionsItem>[] = [
       const transaction = row.original;
       return (
         <div className="flex gap-2">
-          <Image
-            src={transaction.image || ''}
-            alt={transaction.name || 'Transaction Image'}
-            width={40}
-            height={40}
-          />
+          <Avatar>
+            <AvatarImage src={transaction.image} alt={transaction.name} />
+            <AvatarFallback>{transaction.name?.charAt(0)}</AvatarFallback>
+          </Avatar>
 
           <div>
             <div className="font-medium">{transaction.name}</div>

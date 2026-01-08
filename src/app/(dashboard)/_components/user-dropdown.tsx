@@ -1,7 +1,7 @@
 'use client';
-import Image from 'next/image';
 
 import { ChevronDownIcon } from '@/components/icons/chevron-down';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 
 import { UserResponse } from '@/api/generated/models';
@@ -17,17 +17,20 @@ export const UserDropdown = () => {
 
   return (
     <Button variant={'ghost'} className="bg-muted rounded-full" size={'lg'}>
-      <Image
-        className="rounded-full"
-        src={
-          'https://www.gravatar.com/avatar/' +
-          modifiedData?.data.email +
-          '?d=identicon'
-        }
-        alt="User Avatar"
-        width={24}
-        height={24}
-      />
+      <Avatar className="size-6">
+        <AvatarImage
+          src={
+            'https://www.gravatar.com/avatar/' +
+            modifiedData?.data.email +
+            '?d=identicon'
+          }
+          alt={modifiedData?.data.fullName}
+        />
+        <AvatarFallback>
+          {modifiedData?.data.fullName?.charAt(0)}
+        </AvatarFallback>
+      </Avatar>
+
       <span>{modifiedData?.data.fullName}</span>
       <ChevronDownIcon className="text-foreground ml-4 size-2" />
     </Button>
