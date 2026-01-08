@@ -29,7 +29,6 @@ import {
   usePostUsersLogin,
 } from '@/api/generated/react-query/user';
 import { postUsersLoginBody } from '@/api/generated/zod/user.zod';
-import { useSetSessionCookie } from '@/api/internal/auth';
 
 import { signInSearchParams } from '../_utils/search-params';
 
@@ -45,31 +44,20 @@ export const SignInForm = () => {
     },
   });
 
-  const { mutate: setSessionCookie, isPending: isSettingSessionCookie } =
-    useSetSessionCookie({
-      mutation: {
-        onSuccess() {
-          router.replace(searchParams.redirectTo || paths['/'].getHref());
-        },
-        onError(error) {
-          toast.error(
-            error.response?.data?.message ||
-              error.message ||
-              'An error occurred while setting session cookie.',
-          );
-        },
-      },
-    });
-
   const queryClient = useQueryClient();
-  const { mutate: login, isPending: isLoggingIn } = usePostUsersLogin({
+  const { mutate: login, isPending } = usePostUsersLogin({
     mutation: {
       onSuccess(data) {
-        queryClient.setQueryData(getGetUsersProfileQueryKey(), data.data?.user);
+        queryClient.setQueryData(getGetUsersProfileQueryKey(), {
+          success: true,
+          data: data.data?.user,
+        });
+
+        console.log('Login successful:', data.data?.user);
 
         toast.success(data.message || 'Successfully signed in!');
 
-        setSessionCookie(data.data?.accessToken || '');
+        router.replace(searchParams.redirectTo || paths['/'].getHref());
       },
       onError(error) {
         toast.error(
@@ -80,8 +68,6 @@ export const SignInForm = () => {
       },
     },
   });
-
-  const isPending = isLoggingIn || isSettingSessionCookie;
 
   const onSubmit: SubmitHandler<PostUsersLoginMutationBody> = (data) => {
     login({ data });

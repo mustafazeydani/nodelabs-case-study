@@ -3,17 +3,10 @@ import { Xior, type XiorError, type XiorRequestConfig } from 'xior';
 import { CONSTANTS } from '@/config/constants';
 import { secrets } from '@/config/secrets';
 
-// Currently public endpoints that do not require authentication are written here manually.
-// This can be improved by adding a tag in the OpenAPI spec for both public and authenticated endpoints and generating this list automatically.
-const PUBLIC_ENDPOINTS = [
-  '/users/login',
-  '/users/register',
-  '/users/refresh-token',
-];
-
 /* -------------------- XIOR INSTANCE -------------------- */
 export const XIOR_INSTANCE = new Xior({
   baseURL: secrets.api.baseUrl,
+  credentials: 'include',
 });
 
 /* -------------------- REQUEST INTERCEPTOR -------------------- */
@@ -29,10 +22,8 @@ XIOR_INSTANCE.interceptors.request.use(
         }
         config.headers['Authorization'] = `Bearer ${token}`;
       }
-    } else if (
-      !PUBLIC_ENDPOINTS.some((endpoint) => config.url?.includes(endpoint))
-    ) {
-      // Client-side authenticated: route through internal Next.js proxy
+    } else {
+      // Client-side: route through internal Next.js proxy
       // baseURL should be empty for internal routes
       config.baseURL = '';
       const originalUrl = config.url;

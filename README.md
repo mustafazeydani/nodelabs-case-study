@@ -97,24 +97,26 @@ pnpm run dev:https
 
 ## Authentication
 
-The application implements a secure authentication system using httpOnly cookies and Bearer tokens:
+The application implements a secure authentication system using httpOnly cookies:
 
 ### How It Works
 
-1. **Token Storage**: Authentication tokens are stored in httpOnly cookies set by the server, making them inaccessible to client-side JavaScript (prevents XSS attacks)
+1. **Login Flow**:
+   - Client sends credentials to `/api/proxy?target=/users/login`
+   - The proxy forwards the request to the backend API
+   - Backend returns access token in response body and refresh token in `Set-Cookie` header
+   - Proxy extracts both tokens and sets them as httpOnly cookies with `SameSite=Lax`
+   - Both cookies are now available for subsequent authenticated requests
 
-2. **Server-Side Requests**: When making API requests from the server (SSR, API routes, server actions):
-   - The Xior request interceptor automatically reads the token from cookies
-   - The token is added to the `Authorization: Bearer <token>` header
-   - Requests are sent directly to the external API
+2. **Token Storage**: Authentication tokens are stored in httpOnly cookies set by the server, making them inaccessible to client-side JavaScript (prevents XSS attacks)
 
-3. **Client-Side Authenticated Requests**: When making API requests from the browser:
-   - The browser cannot access httpOnly cookies directly
-   - Authenticated requests are routed through an internal `/api/proxy` endpoint
-   - The proxy endpoint (running on the server) reads the httpOnly cookie and adds the Bearer token
-   - The proxy forwards the request to the external API
+3. **Authenticated Requests**:
+   - All client requests are routed through the internal `/api/proxy` endpoint
+   - The proxy automatically reads httpOnly cookies from the request
+   - Cookies are forwarded to the backend API with the request
+   - Backend validates tokens and returns the requested data
 
-4. **Public Endpoints**: Public endpoints (login, register, refresh-token) bypass the proxy and go directly to the API
+4. **Token Refresh**: The refresh token is used automatically by the backend when the access token expires
 
 ### Architecture
 
@@ -122,42 +124,37 @@ The application implements a secure authentication system using httpOnly cookies
 ┌─────────────────────────────────────────────────────────────┐
 │                     Client (Browser)                        │
 │  ┌────────────────────────────────────────────────────────┐ │
-│  │  React Query Hook (Authenticated Endpoint)             │ │
+│  │  React Query Hook                                      │ │
 │  │  → Request to `/api/proxy?target=/financial/summary`  │ │
 │  └────────────────────────────────────────────────────────┘ │
 └──────────────────┬──────────────────────────────────────────┘
-                   │ (HTTP Request - Cookie sent automatically)
+                   │ (HTTP Request - Cookies sent automatically)
 ┌──────────────────▼──────────────────────────────────────────┐
 │              Next.js Server                                 │
 │  ┌────────────────────────────────────────────────────────┐ │
 │  │  /api/proxy Route                                      │ │
-│  │  1. Read httpOnly cookie                               │ │
-│  │  2. Extract token                                      │ │
-│  │  3. Add Authorization header                           │ │
-│  │  4. Forward to external API                            │ │
+│  │  1. Read httpOnly cookies from request                 │ │
+│  │  2. Forward cookies to external API                    │ │
+│  │  3. Handle login: extract and set new tokens           │ │
 │  └────────────────────────────────────────────────────────┘ │
 └──────────────────┬──────────────────────────────────────────┘
-                   │ (Authorization: Bearer <token>)
+                   │ (Cookies sent in request)
 ┌──────────────────▼──────────────────────────────────────────┐
 │           External API Server                               │
 │  ┌────────────────────────────────────────────────────────┐ │
-│  │  Validates Bearer token and returns data               │ │
+│  │  Validates tokens from cookies and returns data        │ │
 │  └────────────────────────────────────────────────────────┘ │
 └──────────────────────────────────────────────────────────────┘
 ```
 
-### Configuration
+### Cookie Handling
 
-The authentication system is configured in `src/api/mutator/custom-instance.ts`:
-
-- **Public Endpoints**: Defined in the `PUBLIC_ENDPOINTS` array. These endpoints don't require authentication and are called directly.
-- **Authenticated Endpoints**: All other endpoints are treated as authenticated on the client-side and routed through the proxy.
-
-To add more public endpoints, simply add them to the `PUBLIC_ENDPOINTS` array:
-
-```typescript
-const PUBLIC_ENDPOINTS = ['/users/login', '/users/register', '/users/refresh-token', '/your-public-endpoint'];
-```
+- **Access Token**: Extracted from login response body and set as httpOnly cookie by the proxy
+- **Refresh Token**: Forwarded from backend's `Set-Cookie` header through the proxy
+- **Cookie Attributes**: 
+  - `HttpOnly`: Prevents JavaScript access
+  - `Secure`: Only sent over HTTPS in production
+  - `SameSite=Lax`: Allows cookies in top-level navigations while maintaining security
 
 ## Tech Stack
 

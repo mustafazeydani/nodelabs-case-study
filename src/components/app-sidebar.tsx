@@ -21,7 +21,6 @@ import { useActivePath } from '@/hooks/use-active-path';
 import { paths } from '@/config/paths';
 
 import { usePostUsersLogout } from '@/api/generated/react-query/user';
-import { useLogoutSession } from '@/api/internal/auth';
 
 import { HelpIcon } from './icons/help';
 import { HomeIcon } from './icons/home';
@@ -72,17 +71,6 @@ export function AppSidebar() {
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  const { mutate: logoutSession } = useLogoutSession({
-    mutation: {
-      onSuccess() {
-        router.replace(paths['sign-in'].getHref());
-      },
-      onError() {
-        toast.error('Failed to terminate session. Please try again.');
-      },
-    },
-  });
-
   const { mutate: logout, isPending } = usePostUsersLogout({
     mutation: {
       onSuccess(_data) {
@@ -93,7 +81,7 @@ export function AppSidebar() {
           'Logged out successfully.',
         );
 
-        logoutSession();
+        router.replace(paths['sign-in'].getHref());
       },
       onError(error) {
         toast.error(
