@@ -11,7 +11,7 @@ import { preloadIndexData } from './_utils/preload-data';
 export { metadata };
 
 export default function Home() {
-  const { dehydratedState } = preloadIndexData(); // Fetch data in server for faster client load
+  const { dehydratedState } = preloadIndexData();
 
   return (
     <div className="flex gap-10">

@@ -1,6 +1,5 @@
 'use client';
 
-import { cubicBezier, motion } from 'framer-motion';
 import { ChevronRight } from 'lucide-react';
 
 import { ErrorBoundary } from '@/components/error-boundary';
@@ -11,17 +10,6 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useGetFinancialTransfersScheduled } from '@/api/generated/react-query/financial';
 
 import { TransferCard } from './transfer-card';
-
-const transfersVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      duration: 0.6,
-      ease: cubicBezier(0.42, 0, 0.58, 1),
-    },
-  },
-};
 
 const TransferSkeletonCard = () => (
   <div className="flex items-center justify-between border-muted border-b py-4">
@@ -75,11 +63,7 @@ export const ScheduledTransfersSection = () => {
         </Card>
       }
     >
-      <motion.div
-        variants={transfersVariants}
-        initial="hidden"
-        animate="visible"
-      >
+      <div className="animate-fade-in">
         <div>
       <div className="flex items-center justify-between">
         <p className="text-lg font-semibold">Scheduled Transfers</p>
@@ -100,7 +84,7 @@ export const ScheduledTransfersSection = () => {
         />
       ))}
         </div>
-      </motion.div>
+      </div>
     </ErrorBoundary>
   );
 };

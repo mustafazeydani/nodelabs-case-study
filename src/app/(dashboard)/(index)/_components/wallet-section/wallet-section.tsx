@@ -1,6 +1,5 @@
 'use client';
 
-import { cubicBezier, motion } from 'framer-motion';
 import { Ellipsis } from 'lucide-react';
 
 import { ErrorBoundary } from '@/components/error-boundary';
@@ -10,17 +9,6 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useGetFinancialWallet } from '@/api/generated/react-query/financial';
 
 import { WalletCard } from './wallet-card';
-
-const walletVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      duration: 0.6,
-      ease: cubicBezier(0.42, 0, 0.58, 1),
-    },
-  },
-};
 
 export const WalletSection = () => {
   const { data, isLoading } = useGetFinancialWallet();
@@ -61,12 +49,7 @@ export const WalletSection = () => {
         </div>
       }
     >
-      <motion.div
-        variants={walletVariants}
-        initial="hidden"
-        animate="visible"
-        className="grow space-y-4"
-      >
+      <div className="animate-fade-in grow space-y-4">
         <div className="flex flex-1 items-center justify-between">
           <p className="text-lg font-semibold">Wallet</p>
           <Ellipsis className="text-muted-foreground" />
@@ -93,7 +76,7 @@ export const WalletSection = () => {
             isSmall
           />
         </div>
-      </motion.div>
+      </div>
     </ErrorBoundary>
   );
 };

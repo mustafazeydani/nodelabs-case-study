@@ -2,8 +2,6 @@
 
 import { Suspense } from 'react';
 
-import { cubicBezier, motion } from 'framer-motion';
-
 import { ErrorBoundary } from '@/components/error-boundary';
 import { WalletAddIcon } from '@/components/icons/wallet-add';
 import { Wallet2Icon } from '@/components/icons/wallet2';
@@ -16,28 +14,6 @@ import { StatisticSkeletonCard } from './statistic-skeleton-card';
 
 function StatisticsCardsContent() {
   const { data } = useGetFinancialSummarySuspense();
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
-
-  const cardVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5,
-        ease: cubicBezier(0.42, 0, 0.58, 1),
-      },
-    },
-  };
 
   if (!data?.data) {
     return (
@@ -52,35 +28,30 @@ function StatisticsCardsContent() {
   }
 
   return (
-    <motion.div
-      className="flex flex-col gap-8 lg:flex-row"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-    >
-      <motion.div variants={cardVariants}>
+    <div className="flex flex-col gap-8 lg:flex-row animate-fade-in">
+      <div className="animate-fade-in-stagger" style={{ animationDelay: '0s' }}>
         <StatisticCard
           isMain
           title="Total balance"
           data={data?.data?.totalBalance}
           icon={Wallet2Icon}
         />
-      </motion.div>
-      <motion.div variants={cardVariants}>
+      </div>
+      <div className="animate-fade-in-stagger" style={{ animationDelay: '0.1s' }}>
         <StatisticCard
           title="Total spending"
           data={data?.data?.totalExpense}
           icon={Wallet2Icon}
         />
-      </motion.div>
-      <motion.div variants={cardVariants}>
+      </div>
+      <div className="animate-fade-in-stagger" style={{ animationDelay: '0.2s' }}>
         <StatisticCard
           title="Total saved"
           data={data?.data?.totalSavings}
           icon={WalletAddIcon}
         />
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 }
 
