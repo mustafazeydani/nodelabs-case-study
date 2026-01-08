@@ -7,6 +7,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 
+import { Skeleton } from '@/components/ui/skeleton';
 import {
   Table,
   TableBody,
@@ -19,11 +20,13 @@ import {
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  isLoading?: boolean;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  isLoading = false,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
@@ -53,7 +56,17 @@ export function DataTable<TData, TValue>({
           ))}
         </TableHeader>
         <TableBody>
-          {table.getRowModel().rows?.length ? (
+          {isLoading ? (
+            Array.from({ length: 5 }).map((_, rowIndex) => (
+              <TableRow key={`skeleton-${rowIndex}`} className="border-muted">
+                {columns.map((_, cellIndex) => (
+                  <TableCell key={`skeleton-cell-${rowIndex}-${cellIndex}`}>
+                    <Skeleton className="h-12 w-full" />
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))
+          ) : table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
                 key={row.id}

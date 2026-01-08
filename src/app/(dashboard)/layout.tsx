@@ -38,7 +38,7 @@ const DashboardLayout = async ({ children }: React.PropsWithChildren) => {
               <UserDropdown />
             </div>
           </div>
-          <main>{children}</main>
+          <main className="max-w-7xl">{children}</main>
         </div>
       </SidebarProvider>
     </HydrationBoundary>

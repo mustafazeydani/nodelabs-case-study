@@ -11,7 +11,7 @@ import { useGetFinancialTransactionsRecent } from '@/api/generated/react-query/f
 import { columns } from './columns';
 
 export const RecentTransactionsDataTable = () => {
-  const { data } = useGetFinancialTransactionsRecent({ limit: 5 });
+  const { data, isLoading } = useGetFinancialTransactionsRecent({ limit: 5 });
 
   return (
     <Card>
@@ -26,7 +26,11 @@ export const RecentTransactionsDataTable = () => {
         </Button>
       </CardHeader>
       <CardContent>
-        <DataTable columns={columns} data={data?.data?.transactions || []} />
+        <DataTable
+          columns={columns}
+          data={data?.data?.transactions || []}
+          isLoading={isLoading}
+        />
       </CardContent>
     </Card>
   );
