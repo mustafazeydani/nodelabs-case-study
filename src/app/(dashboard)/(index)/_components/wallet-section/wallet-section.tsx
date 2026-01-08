@@ -1,45 +1,34 @@
 'use client';
 
+import { Suspense } from 'react';
+
 import { Ellipsis } from 'lucide-react';
 
 import { ErrorBoundary } from '@/components/error-boundary';
-import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 
-import { useGetFinancialWallet } from '@/api/generated/react-query/financial';
+import { useGetFinancialWalletSuspense } from '@/api/generated/react-query/financial';
 
 import { WalletCard } from './wallet-card';
 
-export const WalletSection = () => {
-  const { data, isLoading } = useGetFinancialWallet();
-
-  if (isLoading) {
-    return (
-      <div className="grow space-y-4">
-        <div className="flex flex-1 items-center justify-between">
-          <Skeleton className="h-6 w-24" />
-          <Skeleton className="h-6 w-6" />
-        </div>
-
-        <Skeleton className="h-56 w-full rounded-2xl" />
-        <div className="relative mx-auto -mt-[20%] w-[90%]">
-          <Skeleton className="h-44 w-full rounded-2xl" />
-        </div>
+function WalletSkeleton() {
+  return (
+    <div className="grow space-y-4">
+      <div className="flex flex-1 items-center justify-between">
+        <Skeleton className="h-6 w-24" />
+        <Skeleton className="h-6 w-6" />
       </div>
-    );
-  }
 
-  if (!data?.data?.cards || data.data.cards.length === 0) {
-    return (
-      <Card>
-        <CardContent className="flex h-40 items-center justify-center">
-          <p className="text-muted-foreground text-sm">
-            No wallet data available
-          </p>
-        </CardContent>
-      </Card>
-    );
-  }
+      <Skeleton className="h-56 w-full rounded-2xl" />
+      <div className="relative mx-auto -mt-[20%] w-[90%]">
+        <Skeleton className="h-44 w-full rounded-2xl" />
+      </div>
+    </div>
+  );
+}
+
+function WalletSectionContent() {
+  const { data } = useGetFinancialWalletSuspense();
 
   return (
     <ErrorBoundary
@@ -77,6 +66,22 @@ export const WalletSection = () => {
           />
         </div>
       </div>
+    </ErrorBoundary>
+  );
+}
+
+export const WalletSection = () => {
+  return (
+    <ErrorBoundary
+      fallback={
+        <div className="border-destructive/20 bg-destructive/5 flex h-40 items-center justify-center rounded-lg border">
+          <p className="text-destructive text-sm">Failed to load wallet</p>
+        </div>
+      }
+    >
+      <Suspense fallback={<WalletSkeleton />}>
+        <WalletSectionContent />
+      </Suspense>
     </ErrorBoundary>
   );
 };

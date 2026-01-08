@@ -5,6 +5,8 @@ import { getQueryClient } from '@/lib/react-query';
 import {
   getGetFinancialSummaryQueryOptions,
   getGetFinancialTransactionsRecentQueryOptions,
+  getGetFinancialTransfersScheduledQueryOptions,
+  getGetFinancialWalletQueryOptions,
   getGetFinancialWorkingCapitalQueryOptions,
 } from '@/api/generated/react-query/financial';
 
@@ -20,6 +22,8 @@ export const preloadIndexData = () => {
   queryClient.prefetchQuery(
     getGetFinancialTransactionsRecentQueryOptions({ limit: 5 }),
   );
+  queryClient.prefetchQuery(getGetFinancialWalletQueryOptions());
+  queryClient.prefetchQuery(getGetFinancialTransfersScheduledQueryOptions());
 
   const dehydratedState = dehydrate(queryClient, {
     shouldDehydrateQuery: (query) =>
