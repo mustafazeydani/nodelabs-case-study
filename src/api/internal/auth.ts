@@ -3,7 +3,7 @@ import { XiorError } from 'xior';
 
 import { MutationConfig } from '@/lib/react-query';
 
-import { customInternalInstance } from '../mutator/custom-instance';
+import { customInstance } from '../mutator/custom-instance';
 
 type SetSessionCookieResponse = {
   success: boolean;
@@ -12,7 +12,7 @@ type SetSessionCookieResponse = {
 const setSessionCookie = async (
   token: string,
 ): Promise<SetSessionCookieResponse> => {
-  const res = await customInternalInstance<SetSessionCookieResponse>({
+  const res = await customInstance<SetSessionCookieResponse>({
     url: '/api/auth/session',
     method: 'POST',
     data: { token },
@@ -38,7 +38,7 @@ type LogoutSessionResponse = {
 };
 
 const logoutSession = async (_void?: void): Promise<LogoutSessionResponse> => {
-  const res = await customInternalInstance<LogoutSessionResponse>({
+  const res = await customInstance<LogoutSessionResponse>({
     url: '/api/auth/logout',
     method: 'POST',
   });

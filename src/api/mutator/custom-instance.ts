@@ -1,22 +1,19 @@
 import { Xior, type XiorError, type XiorRequestConfig } from 'xior';
 
 import { CONSTANTS } from '@/config/constants';
+import { secrets } from '@/config/secrets';
 
-const baseURL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || 'https://case.nodelabs.dev/api';
+// Currently public endpoints that do not require authentication are written here manually.
+// This can be improved by adding a tag in the OpenAPI spec for both public and authenticated endpoints and generating this list automatically.
+const PUBLIC_ENDPOINTS = [
+  '/users/login',
+  '/users/register',
+  '/users/refresh-token',
+];
 
-/* -------------------- XIOR INSTANCE (EXTERNAL API) -------------------- */
-
+/* -------------------- XIOR INSTANCE -------------------- */
 export const XIOR_INSTANCE = new Xior({
-  baseURL,
-});
-
-/* -------------------- XIOR INSTANCE (INTERNAL API ROUTES) -------------------- */
-
-export const XIOR_INTERNAL_INSTANCE = new Xior({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL
-    ? undefined
-    : 'http://localhost:3000',
+  baseURL: secrets.api.baseUrl,
 });
 
 /* -------------------- REQUEST INTERCEPTOR -------------------- */
@@ -32,48 +29,34 @@ XIOR_INSTANCE.interceptors.request.use(
         }
         config.headers['Authorization'] = `Bearer ${token}`;
       }
+    } else if (
+      !PUBLIC_ENDPOINTS.some((endpoint) => config.url?.includes(endpoint))
+    ) {
+      // Client-side authenticated: route through internal Next.js proxy
+      // baseURL should be empty for internal routes
+      config.baseURL = '';
+      const originalUrl = config.url;
+      if (originalUrl && !originalUrl.startsWith('/api/')) {
+        config.url = `/api/proxy?target=${encodeURIComponent(originalUrl)}`;
+      }
     }
     return config;
   },
   (error) => Promise.reject(error),
 );
 
-XIOR_INTERNAL_INSTANCE.interceptors.request.use(
-  (config) => {
-    return config;
-  },
-  (error) => Promise.reject(error),
-);
-
 /* -------------------- RESPONSE INTERCEPTOR -------------------- */
-
 XIOR_INSTANCE.interceptors.response.use(
-  (response) => response.data,
-  async (error) => Promise.reject(error),
-);
-
-XIOR_INTERNAL_INSTANCE.interceptors.response.use(
-  (response) => response.data,
+  (response) => response,
   async (error) => Promise.reject(error),
 );
 
 /* -------------------- CUSTOM INSTANCES -------------------- */
-
 export const customInstance = <T>(
   config: XiorRequestConfig,
   options?: XiorRequestConfig,
 ): Promise<T> => {
   return XIOR_INSTANCE.request({
-    ...config,
-    ...options,
-  }).then(({ data }) => data as T);
-};
-
-export const customInternalInstance = <T>(
-  config: XiorRequestConfig,
-  options?: XiorRequestConfig,
-): Promise<T> => {
-  return XIOR_INTERNAL_INSTANCE.request({
     ...config,
     ...options,
   }).then(({ data }) => data as T);

@@ -1,13 +1,10 @@
+import { secrets } from './src/config/secrets';
 import { defineConfig } from 'orval';
-
-const OPENAPI_URL =
-  process.env.NEXT_PUBLIC_OPENAPI_URL ??
-  'https://case.nodelabs.dev/api-docs.json';
 
 export default defineConfig({
   nodelabsApi: {
     input: {
-      target: OPENAPI_URL,
+      target: secrets.openApi.url,
     },
     output: {
       mode: 'tags',
@@ -24,7 +21,7 @@ export default defineConfig({
   },
 
   nodelabsApiZod: {
-    input: OPENAPI_URL,
+    input: secrets.openApi.url,
     output: {
       mode: 'tags',
       client: 'zod',
