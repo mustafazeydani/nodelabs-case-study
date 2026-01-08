@@ -93,6 +93,71 @@ pnpm run dev:https
 - **Form Validation**: Zod-based form validation
 - **Tailwind CSS**: Utility-first CSS framework
 - **TypeScript**: Full type safety
+- **Secure Authentication**: httpOnly cookie-based authentication with Bearer tokens
+
+## Authentication
+
+The application implements a secure authentication system using httpOnly cookies and Bearer tokens:
+
+### How It Works
+
+1. **Token Storage**: Authentication tokens are stored in httpOnly cookies set by the server, making them inaccessible to client-side JavaScript (prevents XSS attacks)
+
+2. **Server-Side Requests**: When making API requests from the server (SSR, API routes, server actions):
+   - The Xior request interceptor automatically reads the token from cookies
+   - The token is added to the `Authorization: Bearer <token>` header
+   - Requests are sent directly to the external API
+
+3. **Client-Side Authenticated Requests**: When making API requests from the browser:
+   - The browser cannot access httpOnly cookies directly
+   - Authenticated requests are routed through an internal `/api/proxy` endpoint
+   - The proxy endpoint (running on the server) reads the httpOnly cookie and adds the Bearer token
+   - The proxy forwards the request to the external API
+
+4. **Public Endpoints**: Public endpoints (login, register, refresh-token) bypass the proxy and go directly to the API
+
+### Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     Client (Browser)                        │
+│  ┌────────────────────────────────────────────────────────┐ │
+│  │  React Query Hook (Authenticated Endpoint)             │ │
+│  │  → Request to `/api/proxy?target=/financial/summary`  │ │
+│  └────────────────────────────────────────────────────────┘ │
+└──────────────────┬──────────────────────────────────────────┘
+                   │ (HTTP Request - Cookie sent automatically)
+┌──────────────────▼──────────────────────────────────────────┐
+│              Next.js Server                                 │
+│  ┌────────────────────────────────────────────────────────┐ │
+│  │  /api/proxy Route                                      │ │
+│  │  1. Read httpOnly cookie                               │ │
+│  │  2. Extract token                                      │ │
+│  │  3. Add Authorization header                           │ │
+│  │  4. Forward to external API                            │ │
+│  └────────────────────────────────────────────────────────┘ │
+└──────────────────┬──────────────────────────────────────────┘
+                   │ (Authorization: Bearer <token>)
+┌──────────────────▼──────────────────────────────────────────┐
+│           External API Server                               │
+│  ┌────────────────────────────────────────────────────────┐ │
+│  │  Validates Bearer token and returns data               │ │
+│  └────────────────────────────────────────────────────────┘ │
+└──────────────────────────────────────────────────────────────┘
+```
+
+### Configuration
+
+The authentication system is configured in `src/api/mutator/custom-instance.ts`:
+
+- **Public Endpoints**: Defined in the `PUBLIC_ENDPOINTS` array. These endpoints don't require authentication and are called directly.
+- **Authenticated Endpoints**: All other endpoints are treated as authenticated on the client-side and routed through the proxy.
+
+To add more public endpoints, simply add them to the `PUBLIC_ENDPOINTS` array:
+
+```typescript
+const PUBLIC_ENDPOINTS = ['/users/login', '/users/register', '/users/refresh-token', '/your-public-endpoint'];
+```
 
 ## Tech Stack
 
