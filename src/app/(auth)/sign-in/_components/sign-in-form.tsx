@@ -49,11 +49,8 @@ export const SignInForm = () => {
     mutation: {
       onSuccess(data) {
         queryClient.setQueryData(getGetUsersProfileQueryKey(), {
-          success: true,
           data: data.data?.user,
         });
-
-        console.log('Login successful:', data.data?.user);
 
         toast.success(data.message || 'Successfully signed in!');
 
@@ -87,6 +84,7 @@ export const SignInForm = () => {
                   {...field}
                   type="email"
                   placeholder="example@gmail.com"
+                  disabled={isPending}
                 />
               </FormControl>
               <FormMessage />
@@ -101,7 +99,12 @@ export const SignInForm = () => {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input {...field} type="password" placeholder="********" />
+                <Input
+                  {...field}
+                  type="password"
+                  placeholder="********"
+                  disabled={isPending}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

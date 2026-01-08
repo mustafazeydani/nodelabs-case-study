@@ -67,7 +67,12 @@ export const SignUpForm = () => {
             <FormItem>
               <FormLabel>Full Name</FormLabel>
               <FormControl>
-                <Input {...field} type="text" placeholder="John Doe" />
+                <Input
+                  {...field}
+                  type="text"
+                  placeholder="John Doe"
+                  disabled={isPending}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -85,6 +90,7 @@ export const SignUpForm = () => {
                   {...field}
                   type="email"
                   placeholder="example@gmail.com"
+                  disabled={isPending}
                 />
               </FormControl>
               <FormMessage />
@@ -99,7 +105,12 @@ export const SignUpForm = () => {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input {...field} type="password" placeholder="********" />
+                <Input
+                  {...field}
+                  type="password"
+                  placeholder="********"
+                  disabled={isPending}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
