@@ -87,11 +87,9 @@ export const ScheduledTransfersSection = () => {
   return (
     <ErrorBoundary
       fallback={
-        <Card>
-          <CardContent className="flex h-24 items-center justify-center">
-            <p className="text-destructive text-sm">Failed to load transfers</p>
-          </CardContent>
-        </Card>
+        <div className="border-destructive/20 bg-destructive/5 flex h-40 items-center justify-center rounded-lg border">
+          <p className="text-destructive text-sm">Failed to load transfers</p>
+        </div>
       }
     >
       <Suspense fallback={<TransfersSkeleton />}>

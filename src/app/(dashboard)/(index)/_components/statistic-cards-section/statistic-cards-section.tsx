@@ -28,7 +28,7 @@ function StatisticsCardsContent() {
   }
 
   return (
-    <div className="flex flex-col gap-8 lg:flex-row animate-fade-in">
+    <div className="animate-fade-in flex flex-col gap-8 lg:flex-row">
       <div className="animate-fade-in-stagger" style={{ animationDelay: '0s' }}>
         <StatisticCard
           isMain
@@ -37,14 +37,20 @@ function StatisticsCardsContent() {
           icon={Wallet2Icon}
         />
       </div>
-      <div className="animate-fade-in-stagger" style={{ animationDelay: '0.1s' }}>
+      <div
+        className="animate-fade-in-stagger"
+        style={{ animationDelay: '0.1s' }}
+      >
         <StatisticCard
           title="Total spending"
           data={data?.data?.totalExpense}
           icon={Wallet2Icon}
         />
       </div>
-      <div className="animate-fade-in-stagger" style={{ animationDelay: '0.2s' }}>
+      <div
+        className="animate-fade-in-stagger"
+        style={{ animationDelay: '0.2s' }}
+      >
         <StatisticCard
           title="Total saved"
           data={data?.data?.totalSavings}
@@ -56,7 +62,13 @@ function StatisticsCardsContent() {
 }
 
 export const StatisticsCardsSection = () => (
-  <ErrorBoundary>
+  <ErrorBoundary
+    fallback={
+      <div className="border-destructive/20 bg-destructive/5 flex h-40 items-center justify-center rounded-lg border">
+        <p className="text-destructive text-sm">Failed to load statistics</p>
+      </div>
+    }
+  >
     <Suspense
       fallback={
         <div className="flex flex-col gap-8 lg:flex-row">
