@@ -28,9 +28,9 @@ function StatisticsCardsContent() {
   }
 
   return (
-    <div className="animate-fade-in flex flex-col flex-wrap gap-8 lg:flex-row">
+    <div className="animate-fade-in flex flex-col flex-wrap gap-8 opacity-0 lg:flex-row">
       <div
-        className="animate-fade-in-stagger flex-1"
+        className="animate-fade-in-stagger flex-1 opacity-0"
         style={{ animationDelay: '0s' }}
       >
         <StatisticCard
@@ -41,7 +41,7 @@ function StatisticsCardsContent() {
         />
       </div>
       <div
-        className="animate-fade-in-stagger flex-1"
+        className="animate-fade-in-stagger flex-1 opacity-0"
         style={{ animationDelay: '0.2s' }}
       >
         <StatisticCard
@@ -51,7 +51,7 @@ function StatisticsCardsContent() {
         />
       </div>
       <div
-        className="animate-fade-in-stagger flex-1"
+        className="animate-fade-in-stagger flex-1 opacity-0"
         style={{ animationDelay: '0.3s' }}
       >
         <StatisticCard

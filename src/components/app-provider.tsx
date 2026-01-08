@@ -16,6 +16,7 @@ export const AppProvider = ({ children }: React.PropsWithChildren) => {
   return (
     <NuqsAdapter>
       <QueryClientProvider client={queryClient}>
+        {/* Added Suspense to handle error from progress bar library (useSearchParams() should be wrapped in a suspense boundary at page) */}
         <Suspense>
           <ProgressProvider
             height="3px"
