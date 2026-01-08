@@ -8,7 +8,7 @@ export const ClientTitle = () => {
   const pathname = usePathname().split('/').pop();
 
   return (
-    <h1 className="text-2xl font-semibold">
+    <h1 className="font-semibold lg:text-2xl">
       {paths[(pathname as keyof typeof paths) || '/']?.label}
     </h1>
   );

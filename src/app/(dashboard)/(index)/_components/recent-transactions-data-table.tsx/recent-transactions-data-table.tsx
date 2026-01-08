@@ -39,7 +39,7 @@ function RecentTransactionsContent() {
   return (
     <Card>
       <CardHeader className="flex items-center justify-between">
-        <CardTitle className="text-lg">Recent Transactions</CardTitle>
+        <CardTitle className="sm:text-lg">Recent Transactions</CardTitle>
         <Button
           variant={'ghost'}
           className="text-secondary hover:text-secondary/80 font-semibold"

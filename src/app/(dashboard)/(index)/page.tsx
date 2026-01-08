@@ -14,8 +14,8 @@ export default function Home() {
   const { dehydratedState } = preloadIndexData();
 
   return (
-    <div className="flex gap-10">
-      <div className="basis-2/3 space-y-4">
+    <div className="flex flex-col gap-10 lg:flex-row">
+      <div className="min-w-0 flex-1 space-y-4">
         <HydrationBoundary state={dehydratedState}>
           <StatisticsCardsSection />
           <WorkingCapitalChart />
@@ -23,7 +23,7 @@ export default function Home() {
         </HydrationBoundary>
       </div>
 
-      <div className="basis-1/3 space-y-6">
+      <div className="space-y-6 sm:min-w-sm">
         <HydrationBoundary state={dehydratedState}>
           <WalletSection />
           <ScheduledTransfersSection />

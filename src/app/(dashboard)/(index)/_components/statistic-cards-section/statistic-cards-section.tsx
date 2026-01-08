@@ -28,8 +28,8 @@ function StatisticsCardsContent() {
   }
 
   return (
-    <div className="animate-fade-in flex flex-col gap-8 lg:flex-row">
-      <div className="animate-fade-in-stagger" style={{ animationDelay: '0s' }}>
+    <div className="animate-fade-in flex flex-col flex-wrap gap-8 lg:flex-row">
+      <div className="animate-fade-in-stagger flex-1" style={{ animationDelay: '0s' }}>
         <StatisticCard
           isMain
           title="Total balance"
@@ -38,8 +38,8 @@ function StatisticsCardsContent() {
         />
       </div>
       <div
-        className="animate-fade-in-stagger"
-        style={{ animationDelay: '0.1s' }}
+        className="animate-fade-in-stagger flex-1"
+        style={{ animationDelay: '0.2s' }}
       >
         <StatisticCard
           title="Total spending"
@@ -48,8 +48,8 @@ function StatisticsCardsContent() {
         />
       </div>
       <div
-        className="animate-fade-in-stagger"
-        style={{ animationDelay: '0.2s' }}
+        className="animate-fade-in-stagger flex-1"
+        style={{ animationDelay: '0.3s' }}
       >
         <StatisticCard
           title="Total saved"

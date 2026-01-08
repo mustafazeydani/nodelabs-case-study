@@ -31,8 +31,8 @@ export const UserDropdown = () => {
         </AvatarFallback>
       </Avatar>
 
-      <span>{modifiedData?.data.fullName}</span>
-      <ChevronDownIcon className="text-foreground ml-4 size-2" />
+      <span className="hidden lg:inline">{modifiedData?.data.fullName}</span>
+      <ChevronDownIcon className="text-foreground ml-4 hidden size-2 lg:block" />
     </Button>
   );
 };

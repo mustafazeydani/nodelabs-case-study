@@ -78,12 +78,12 @@ function WorkingCapitalChartContent() {
   return (
     <div className="animate-fade-in">
       <Card className="shadow-none">
-        <CardHeader className="flex items-center justify-between">
-          <CardTitle className="text-lg font-semibold">
+        <CardHeader className="flex flex-col items-center justify-between sm:flex-row">
+          <CardTitle className="font-semibold lg:text-lg">
             Working Capital
           </CardTitle>
 
-          <div className="flex items-center gap-16">
+          <div className="flex flex-col gap-4 sm:flex-row md:items-center xl:gap-8 2xl:gap-16">
             <div className="flex items-center gap-8">
               <div className="flex items-center gap-2">
                 <span className="bg-secondary size-3 shrink-0 rounded-full" />
