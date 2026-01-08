@@ -14,9 +14,19 @@ export const formatCurrency = (
     return '';
   }
 
+  // Map symbols to currency codes if needed
+  const currencyMap: Record<string, string> = {
+    $: 'USD',
+    '€': 'EUR',
+    '£': 'GBP',
+    '¥': 'JPY',
+  };
+
+  const currencyCode = currencyMap[currency] || currency;
+
   return new Intl.NumberFormat(undefined, {
     style: 'currency',
-    currency: currency,
+    currency: currencyCode,
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
   }).format(amount);
@@ -28,9 +38,30 @@ export const formatDate = (dateString: string | undefined): string => {
   }
 
   const date = new Date(dateString);
-  return new Intl.DateTimeFormat(undefined, {
+  const hasTime = dateString.includes('T') || dateString.includes(' ');
+
+  const dateOptions: Intl.DateTimeFormatOptions = {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
-  }).format(date);
+  };
+
+  const formattedDate = new Intl.DateTimeFormat(undefined, dateOptions).format(
+    date,
+  );
+
+  if (hasTime) {
+    const timeOptions: Intl.DateTimeFormatOptions = {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+    };
+    const formattedTime = new Intl.DateTimeFormat(
+      undefined,
+      timeOptions,
+    ).format(date);
+    return `${formattedDate} at ${formattedTime}`;
+  }
+
+  return formattedDate;
 };
