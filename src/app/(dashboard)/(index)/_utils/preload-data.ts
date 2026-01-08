@@ -17,7 +17,15 @@ export const preloadIndexData = () => {
   // while data loads, then renders content as each query completes.
   const queryClient = getQueryClient();
 
-  queryClient.prefetchQuery(getGetFinancialSummaryQueryOptions());
+  queryClient.prefetchQuery(
+    getGetFinancialSummaryQueryOptions({
+      request: {
+        next: {
+          revalidate: 60, // Revalidate every 60 seconds
+        },
+      },
+    }),
+  );
   queryClient.prefetchQuery(
     getGetFinancialWorkingCapitalQueryOptions({
       request: {

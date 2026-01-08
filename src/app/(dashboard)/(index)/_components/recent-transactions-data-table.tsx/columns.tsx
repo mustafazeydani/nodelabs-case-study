@@ -41,7 +41,6 @@ export const columns: ColumnDef<RecentTransactionsTransactionsItem>[] = [
     header: 'Amount',
     cell: ({ row }) => {
       const amount = row.original.amount || 0;
-      console.log(amount);
       const currency = row.original.currency || 'USD';
       const formattedAmount = formatCurrency(amount, currency);
       return <span className="font-semibold">{formattedAmount}</span>;
