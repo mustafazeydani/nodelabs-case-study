@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { Suspense } from 'react';
 
 import { ProgressProvider } from '@bprogress/next/app';
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -16,16 +16,18 @@ export const AppProvider = ({ children }: React.PropsWithChildren) => {
   return (
     <NuqsAdapter>
       <QueryClientProvider client={queryClient}>
-        <ProgressProvider
-          height="3px"
-          color="var(--primary)"
-          options={{ showSpinner: false }}
-          shallowRouting
-        >
-          {children}
-          <ReactQueryDevtools initialIsOpen={false} />
-          <ToastContainer />
-        </ProgressProvider>
+        <Suspense>
+          <ProgressProvider
+            height="3px"
+            color="var(--primary)"
+            options={{ showSpinner: false }}
+            shallowRouting
+          >
+            {children}
+            <ReactQueryDevtools initialIsOpen={false} />
+            <ToastContainer />
+          </ProgressProvider>
+        </Suspense>
       </QueryClientProvider>
     </NuqsAdapter>
   );
