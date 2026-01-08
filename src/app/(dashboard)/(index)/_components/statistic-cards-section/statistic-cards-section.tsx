@@ -1,18 +1,21 @@
 'use client';
 
+import { Suspense } from 'react';
+
 import { cubicBezier, motion } from 'framer-motion';
 
+import { ErrorBoundary } from '@/components/error-boundary';
 import { WalletAddIcon } from '@/components/icons/wallet-add';
 import { Wallet2Icon } from '@/components/icons/wallet2';
 import { Card, CardContent } from '@/components/ui/card';
 
-import { useGetFinancialSummary } from '@/api/generated/react-query/financial';
+import { useGetFinancialSummarySuspense } from '@/api/generated/react-query/financial';
 
 import { StatisticCard } from './statistic-card';
 import { StatisticSkeletonCard } from './statistic-skeleton-card';
 
-export const StatisticsCardsSection = () => {
-  const { data, isLoading } = useGetFinancialSummary();
+function StatisticsCardsContent() {
+  const { data } = useGetFinancialSummarySuspense();
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -20,7 +23,6 @@ export const StatisticsCardsSection = () => {
       opacity: 1,
       transition: {
         staggerChildren: 0.1,
-        delayChildren: 0.2,
       },
     },
   };
@@ -36,16 +38,6 @@ export const StatisticsCardsSection = () => {
       },
     },
   };
-
-  if (isLoading) {
-    return (
-      <div className="flex flex-col gap-8 lg:flex-row">
-        <StatisticSkeletonCard />
-        <StatisticSkeletonCard />
-        <StatisticSkeletonCard />
-      </div>
-    );
-  }
 
   if (!data?.data) {
     return (
@@ -90,4 +82,20 @@ export const StatisticsCardsSection = () => {
       </motion.div>
     </motion.div>
   );
-};
+}
+
+export const StatisticsCardsSection = () => (
+  <ErrorBoundary>
+    <Suspense
+      fallback={
+        <div className="flex flex-col gap-8 lg:flex-row">
+          <StatisticSkeletonCard />
+          <StatisticSkeletonCard />
+          <StatisticSkeletonCard />
+        </div>
+      }
+    >
+      <StatisticsCardsContent />
+    </Suspense>
+  </ErrorBoundary>
+);

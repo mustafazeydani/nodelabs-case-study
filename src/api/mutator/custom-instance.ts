@@ -13,6 +13,7 @@ export const XIOR_INSTANCE = new Xior({
 XIOR_INSTANCE.interceptors.request.use(
   async (config) => {
     if (typeof window === 'undefined') {
+      console.log('SERVER SIDE REQUEST', config.url);
       const cookies = await import('next/headers').then((mod) => mod.cookies());
       const token = cookies.get(CONSTANTS.accessTokenCookieName)?.value;
 
@@ -25,6 +26,7 @@ XIOR_INSTANCE.interceptors.request.use(
     } else {
       // Client-side: route through internal Next.js proxy
       // baseURL should be empty for internal routes
+      console.log('CLIENT SIDE REQUEST', config.url);
       config.baseURL = '';
       const originalUrl = config.url;
       if (originalUrl && !originalUrl.startsWith('/api/')) {
