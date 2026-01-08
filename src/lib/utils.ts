@@ -21,3 +21,16 @@ export const formatCurrency = (
     maximumFractionDigits: decimals,
   }).format(amount);
 };
+
+export const formatDate = (dateString: string | undefined): string => {
+  if (!dateString) {
+    return '';
+  }
+
+  const date = new Date(dateString);
+  return new Intl.DateTimeFormat(undefined, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  }).format(date);
+};

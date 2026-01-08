@@ -1,3 +1,4 @@
+import { RecentTransactionsDataTable } from './_components/recent-transactions-data-table.tsx/recent-transactions-data-table';
 import { StatisticsCardsSection } from './_components/statistic-cards-section';
 import { WorkingCapitalChart } from './_components/working-capital-chart';
 import { metadata } from './_utils/metadata';
@@ -10,6 +11,7 @@ export default function Home() {
       <div className="space-y-4">
         <StatisticsCardsSection />
         <WorkingCapitalChart />
+        <RecentTransactionsDataTable />
       </div>
     </div>
   );

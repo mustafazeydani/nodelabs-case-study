@@ -8,7 +8,7 @@ export const StatisticSkeletonCard = () => (
 
     <div className="w-full space-y-2">
       <Skeleton className="h-4 w-24" />
-      <Skeleton className="h-8 w-32" />
+      <Skeleton className="h-8 w-40" />
     </div>
   </div>
 );

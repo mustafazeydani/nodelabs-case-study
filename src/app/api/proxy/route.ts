@@ -26,7 +26,15 @@ export async function GET(request: NextRequest) {
       ? decodedTarget
       : `${baseURL}${decodedTarget}`;
 
-    const response = await fetch(fullUrl, {
+    // Preserve query parameters from the request (except 'target')
+    const url = new URL(fullUrl);
+    searchParams.forEach((value, key) => {
+      if (key !== 'target') {
+        url.searchParams.append(key, value);
+      }
+    });
+
+    const response = await fetch(url.toString(), {
       headers,
       credentials: 'include',
     });
@@ -74,7 +82,15 @@ export async function POST(request: NextRequest) {
       ? decodedTarget
       : `${baseURL}${decodedTarget}`;
 
-    const response = await fetch(fullUrl, {
+    // Preserve query parameters from the request (except 'target')
+    const url = new URL(fullUrl);
+    searchParams.forEach((value, key) => {
+      if (key !== 'target') {
+        url.searchParams.append(key, value);
+      }
+    });
+
+    const response = await fetch(url.toString(), {
       method: 'POST',
       headers,
       body: JSON.stringify(body),

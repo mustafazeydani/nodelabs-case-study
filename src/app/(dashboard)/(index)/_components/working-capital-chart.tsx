@@ -11,6 +11,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '@/components/ui/chart';
+import { Skeleton } from '@/components/ui/skeleton';
 import { formatCurrency } from '@/lib/utils';
 
 import { useGetFinancialWorkingCapital } from '@/api/generated/react-query/financial';
@@ -18,11 +19,11 @@ import { useGetFinancialWorkingCapital } from '@/api/generated/react-query/finan
 const chartConfig = {
   income: {
     label: 'Income',
-    color: 'var(--primary)',
+    color: 'var(--secondary)',
   },
   expense: {
     label: 'Expense',
-    color: 'var(--secondary)',
+    color: 'var(--primary)',
   },
 } satisfies ChartConfig;
 
@@ -31,9 +32,35 @@ const map = {
 };
 
 export const WorkingCapitalChart = () => {
-  const { data } = useGetFinancialWorkingCapital();
+  const { data, isLoading } = useGetFinancialWorkingCapital();
 
   const chartData = data?.data?.data;
+
+  if (isLoading) {
+    return (
+      <Card>
+        <CardHeader className="flex items-center justify-between">
+          <Skeleton className="h-6 w-32" />
+          <div className="flex items-center gap-16">
+            <div className="flex items-center gap-8">
+              <div className="flex items-center gap-2">
+                <Skeleton className="size-3 rounded-full" />
+                <Skeleton className="h-3 w-12" />
+              </div>
+              <div className="flex items-center gap-2">
+                <Skeleton className="size-3 rounded-full" />
+                <Skeleton className="h-3 w-12" />
+              </div>
+            </div>
+            <Skeleton className="h-10 w-40" />
+          </div>
+        </CardHeader>
+        <CardContent className="h-64 overflow-hidden">
+          <Skeleton className="h-full w-full" />
+        </CardContent>
+      </Card>
+    );
+  }
 
   if (!chartData) {
     return null;

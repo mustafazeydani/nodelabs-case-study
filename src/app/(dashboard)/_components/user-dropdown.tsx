@@ -3,12 +3,6 @@ import Image from 'next/image';
 
 import { ChevronDownIcon } from '@/components/icons/chevron-down';
 import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 
 import { UserResponse } from '@/api/generated/models';
 import { useGetUsersProfile } from '@/api/generated/react-query/user';
@@ -22,27 +16,20 @@ export const UserDropdown = () => {
     | undefined;
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant={'ghost'} className="bg-muted rounded-full" size={'lg'}>
-          <Image
-            className="rounded-full"
-            src={
-              'https://www.gravatar.com/avatar/' +
-              modifiedData?.data.email +
-              '?d=identicon'
-            }
-            alt="User Avatar"
-            width={24}
-            height={24}
-          />
-          <span>{modifiedData?.data.fullName}</span>
-          <ChevronDownIcon className="text-foreground ml-4 size-2" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem>Logout</DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <Button variant={'ghost'} className="bg-muted rounded-full" size={'lg'}>
+      <Image
+        className="rounded-full"
+        src={
+          'https://www.gravatar.com/avatar/' +
+          modifiedData?.data.email +
+          '?d=identicon'
+        }
+        alt="User Avatar"
+        width={24}
+        height={24}
+      />
+      <span>{modifiedData?.data.fullName}</span>
+      <ChevronDownIcon className="text-foreground ml-4 size-2" />
+    </Button>
   );
 };
