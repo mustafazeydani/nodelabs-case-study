@@ -10,13 +10,13 @@ export { metadata };
 export default function Home() {
   return (
     <div className="flex gap-10">
-      <div className="flex-1 space-y-4">
+      <div className="basis-2/3 space-y-4">
         <StatisticsCardsSection />
         <WorkingCapitalChart />
         <RecentTransactionsDataTable />
       </div>
 
-      <div className="flex-1 space-y-6">
+      <div className="basis-1/3 space-y-6">
         <WalletSection />
         <ScheduledTransfersSection />
       </div>

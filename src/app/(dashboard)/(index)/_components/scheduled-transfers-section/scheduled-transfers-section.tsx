@@ -1,18 +1,86 @@
 'use client';
 
+import { cubicBezier, motion } from 'framer-motion';
 import { ChevronRight } from 'lucide-react';
 
+import { ErrorBoundary } from '@/components/error-boundary';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 
 import { useGetFinancialTransfersScheduled } from '@/api/generated/react-query/financial';
 
 import { TransferCard } from './transfer-card';
 
+const transfersVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      duration: 0.6,
+      ease: cubicBezier(0.42, 0, 0.58, 1),
+    },
+  },
+};
+
+const TransferSkeletonCard = () => (
+  <div className="flex items-center justify-between border-muted border-b py-4">
+    <div className="flex items-center gap-4">
+      <Skeleton className="h-10 w-10 rounded-full" />
+      <div className="space-y-2">
+        <Skeleton className="h-4 w-32" />
+        <Skeleton className="h-3 w-40" />
+      </div>
+    </div>
+    <Skeleton className="h-4 w-24" />
+  </div>
+);
+
 export const ScheduledTransfersSection = () => {
-  const { data } = useGetFinancialTransfersScheduled();
+  const { data, isLoading } = useGetFinancialTransfersScheduled();
+
+  if (isLoading) {
+    return (
+      <div>
+        <div className="flex items-center justify-between">
+          <Skeleton className="h-6 w-40" />
+          <Skeleton className="h-8 w-24" />
+        </div>
+        <div className="space-y-0">
+          <TransferSkeletonCard />
+          <TransferSkeletonCard />
+          <TransferSkeletonCard />
+        </div>
+      </div>
+    );
+  }
+
+  if (!data?.data?.transfers || data.data.transfers.length === 0) {
+    return (
+      <Card>
+        <CardContent className="flex h-24 items-center justify-center">
+          <p className="text-sm text-muted-foreground">No scheduled transfers</p>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
-    <div>
+    <ErrorBoundary
+      fallback={
+        <Card>
+          <CardContent className="flex h-24 items-center justify-center">
+            <p className="text-sm text-destructive">Failed to load transfers</p>
+          </CardContent>
+        </Card>
+      }
+    >
+      <motion.div
+        variants={transfersVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <div>
       <div className="flex items-center justify-between">
         <p className="text-lg font-semibold">Scheduled Transfers</p>
         <Button
@@ -31,6 +99,8 @@ export const ScheduledTransfersSection = () => {
           isLast={index === (data?.data?.transfers?.length ?? 0) - 1}
         />
       ))}
-    </div>
+        </div>
+      </motion.div>
+    </ErrorBoundary>
   );
 };

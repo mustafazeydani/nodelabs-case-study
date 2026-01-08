@@ -4,6 +4,7 @@ import { cubicBezier, motion } from 'framer-motion';
 
 import { WalletAddIcon } from '@/components/icons/wallet-add';
 import { Wallet2Icon } from '@/components/icons/wallet2';
+import { Card, CardContent } from '@/components/ui/card';
 
 import { useGetFinancialSummary } from '@/api/generated/react-query/financial';
 
@@ -43,6 +44,18 @@ export const StatisticsCardsSection = () => {
         <StatisticSkeletonCard />
         <StatisticSkeletonCard />
       </div>
+    );
+  }
+
+  if (!data?.data) {
+    return (
+      <Card>
+        <CardContent className="flex h-32 items-center justify-center">
+          <p className="text-muted-foreground text-sm">
+            No statistics data available
+          </p>
+        </CardContent>
+      </Card>
     );
   }
 
