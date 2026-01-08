@@ -31,7 +31,7 @@ function WalletSectionContent() {
   const { data } = useGetFinancialWalletSuspense();
 
   return (
-    <div className="animate-fade-in grow space-y-4">
+    <div className="animate-fade-in grow space-y-4 opacity-0">
       <div className="flex flex-1 items-center justify-between">
         <p className="text-lg font-semibold">Wallet</p>
         <Ellipsis className="text-muted-foreground" />

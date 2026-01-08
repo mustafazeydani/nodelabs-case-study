@@ -7,7 +7,8 @@ export const queryConfig = {
     // throwOnError: true,
     refetchOnWindowFocus: false,
     retry: false,
-    staleTime: 1000 * 60,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    gcTime: 1000 * 60 * 10, // 10 minutes
   },
 } satisfies DefaultOptions;
 

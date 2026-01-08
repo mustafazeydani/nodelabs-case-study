@@ -76,7 +76,7 @@ function WorkingCapitalChartContent() {
   }
 
   return (
-    <div className="animate-fade-in">
+    <div className="animate-fade-in opacity-0">
       <Card className="shadow-none">
         <CardHeader className="flex flex-col items-center justify-between sm:flex-row">
           <CardTitle className="font-semibold lg:text-lg">

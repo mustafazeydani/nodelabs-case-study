@@ -18,12 +18,45 @@ export const preloadIndexData = () => {
   const queryClient = getQueryClient();
 
   queryClient.prefetchQuery(getGetFinancialSummaryQueryOptions());
-  queryClient.prefetchQuery(getGetFinancialWorkingCapitalQueryOptions());
   queryClient.prefetchQuery(
-    getGetFinancialTransactionsRecentQueryOptions({ limit: 5 }),
+    getGetFinancialWorkingCapitalQueryOptions({
+      request: {
+        next: {
+          revalidate: 60, // Revalidate every 60 seconds
+        },
+      },
+    }),
   );
-  queryClient.prefetchQuery(getGetFinancialWalletQueryOptions());
-  queryClient.prefetchQuery(getGetFinancialTransfersScheduledQueryOptions());
+  queryClient.prefetchQuery(
+    getGetFinancialTransactionsRecentQueryOptions(
+      { limit: 5 },
+      {
+        request: {
+          next: {
+            revalidate: 60,
+          },
+        },
+      },
+    ),
+  );
+  queryClient.prefetchQuery(
+    getGetFinancialWalletQueryOptions({
+      request: {
+        next: {
+          revalidate: 60,
+        },
+      },
+    }),
+  );
+  queryClient.prefetchQuery(
+    getGetFinancialTransfersScheduledQueryOptions({
+      request: {
+        next: {
+          revalidate: 60,
+        },
+      },
+    }),
+  );
 
   const dehydratedState = dehydrate(queryClient, {
     shouldDehydrateQuery: (query) =>

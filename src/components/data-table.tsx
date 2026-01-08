@@ -43,7 +43,7 @@ export function DataTable<TData, TValue>({
         </div>
       }
     >
-      <div className="animate-fade-in">
+      <div className="animate-fade-in opacity-0">
         <div className="overflow-hidden">
           <Table>
             <TableHeader>

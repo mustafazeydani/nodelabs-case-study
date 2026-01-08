@@ -58,7 +58,7 @@ function ScheduledTransfersContent() {
   }
 
   return (
-    <div className="animate-fade-in">
+    <div className="animate-fade-in opacity-0">
       <div>
         <div className="flex items-center justify-between">
           <p className="text-lg font-semibold">Scheduled Transfers</p>
