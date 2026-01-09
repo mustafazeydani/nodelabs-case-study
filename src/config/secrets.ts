@@ -12,7 +12,7 @@ type Secrets = {
 
 const defaults: Secrets = {
   openApi: {
-    url: 'https://case.nodelabs.dev/api/docs/openapi.json',
+    url: 'https://case.nodelabs.dev/api-docs.json',
   },
   api: {
     baseUrl: 'https://case.nodelabs.dev/api',
