@@ -29,6 +29,6 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-  ],
+, "src/app/(dashboard)/(index)/_components/recent-transactions-data-table"  ],
   "exclude": ["node_modules"]
 }

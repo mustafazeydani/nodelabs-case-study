@@ -1,4 +1,4 @@
-import { RecentTransactionsDataTable } from './_components/recent-transactions-data-table.tsx/recent-transactions-data-table';
+import { RecentTransactionsDataTable } from './_components/recent-transactions-data-table';
 import { ScheduledTransfersSection } from './_components/scheduled-transfers-section';
 import { StatisticsCardsSection } from './_components/statistic-cards-section';
 import { WalletSection } from './_components/wallet-section';
