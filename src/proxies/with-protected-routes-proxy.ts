@@ -25,19 +25,25 @@ export const withProtectedRoutesProxy: ProxyFactory = (next: NextProxy) => {
       return next(request, _next);
     }
 
-    const token = request.cookies.get(CONSTANTS.accessTokenCookieName)?.value;
+    const accessToken = request.cookies.get(CONSTANTS.accessTokenCookieName);
+    const refreshToken = request.cookies.get(
+      CONSTANTS.refreshTokenCookieName,
+    )?.value;
+
+    const isTokensAvailable = Boolean(accessToken || refreshToken);
+
     const isPublicRoute = PUBLIC_ROUTES.some((route) =>
       pathname.startsWith(route),
     );
     const isAuthRoute = AUTH_ROUTES.some((route) => pathname.startsWith(route));
 
     // Redirect authenticated users away from auth pages
-    if (isAuthRoute && token) {
+    if (isAuthRoute && isTokensAvailable) {
       return NextResponse.redirect(new URL(paths['/'].getHref(), request.url));
     }
 
     // Redirect unauthenticated users to login (except on public routes)
-    if (!isPublicRoute && !token) {
+    if (!isPublicRoute && !isTokensAvailable) {
       const loginUrl = new URL(
         paths['sign-in'].getHref({ redirectTo: pathname }),
         request.url,
