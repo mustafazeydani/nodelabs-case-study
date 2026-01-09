@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { CONSTANTS } from '@/config/constants';
 import { secrets } from '@/config/secrets';
 
+import { getHeadersWithCookies } from '@/proxies/utils';
+
 const baseURL = secrets.api.baseUrl;
 
 export async function GET(request: NextRequest) {
@@ -23,12 +25,9 @@ export async function GET(request: NextRequest) {
   }
 
   // Forward cookies to backend - critical for refresh token to work
-  const cookieString = request.cookies
-    .getAll()
-    .map((c) => `${c.name}=${c.value}`)
-    .join('; ');
-  if (cookieString) {
-    headers.set('Cookie', cookieString);
+  const cookieHeaders = getHeadersWithCookies(request);
+  if (cookieHeaders['Cookie']) {
+    headers.set('Cookie', cookieHeaders['Cookie']);
   }
 
   try {
@@ -89,12 +88,9 @@ export async function POST(request: NextRequest) {
 
   // Forward cookies to backend - critical for refresh token to work
   // The cookies are stored on the Next.js domain but need to be forwarded to the backend
-  const cookieString = request.cookies
-    .getAll()
-    .map((c) => `${c.name}=${c.value}`)
-    .join('; ');
-  if (cookieString) {
-    headers.set('Cookie', cookieString);
+  const cookieHeaders = getHeadersWithCookies(request);
+  if (cookieHeaders['Cookie']) {
+    headers.set('Cookie', cookieHeaders['Cookie']);
   }
 
   try {

@@ -80,15 +80,18 @@ XIOR_INSTANCE.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-
-    // Client-side 401 handling: attempt token refresh
     const decodedTarget = getDecodedTarget(originalRequest?.url);
+
+    // Skip refresh for auth endpoints themselves
     if (
-      error.response?.status === 401 &&
-      typeof window !== 'undefined' &&
-      !decodedTarget.includes('/users/login') &&
-      !decodedTarget.includes('/users/refresh-token')
+      decodedTarget.includes('/users/login') ||
+      decodedTarget.includes('/users/refresh-token')
     ) {
+      return Promise.reject(error);
+    }
+
+    if (error.response?.status === 401) {
+      // Client-side 401 handling: attempt token refresh
       if (!isRefreshing) {
         isRefreshing = true;
 

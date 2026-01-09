@@ -1,19 +1,27 @@
 'use client';
 
-import { Suspense } from 'react';
-
 import { ErrorBoundary } from '@/components/error-boundary';
 import { WalletAddIcon } from '@/components/icons/wallet-add';
 import { Wallet2Icon } from '@/components/icons/wallet2';
 import { Card, CardContent } from '@/components/ui/card';
 
-import { useGetFinancialSummarySuspense } from '@/api/generated/react-query/financial';
+import { useGetFinancialSummary } from '@/api/generated/react-query/financial';
 
 import { StatisticCard } from './statistic-card';
 import { StatisticSkeletonCard } from './statistic-skeleton-card';
 
 function StatisticsCardsContent() {
-  const { data } = useGetFinancialSummarySuspense();
+  const { data, isLoading } = useGetFinancialSummary();
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col gap-8 lg:flex-row">
+        <StatisticSkeletonCard />
+        <StatisticSkeletonCard />
+        <StatisticSkeletonCard />
+      </div>
+    );
+  }
 
   if (!data?.data) {
     return (
@@ -72,16 +80,6 @@ export const StatisticsCardsSection = () => (
       </div>
     }
   >
-    <Suspense
-      fallback={
-        <div className="flex flex-col gap-8 lg:flex-row">
-          <StatisticSkeletonCard />
-          <StatisticSkeletonCard />
-          <StatisticSkeletonCard />
-        </div>
-      }
-    >
-      <StatisticsCardsContent />
-    </Suspense>
+    <StatisticsCardsContent />
   </ErrorBoundary>
 );

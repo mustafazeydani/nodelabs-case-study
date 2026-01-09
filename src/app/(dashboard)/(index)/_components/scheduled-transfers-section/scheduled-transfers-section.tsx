@@ -1,7 +1,5 @@
 'use client';
 
-import { Suspense } from 'react';
-
 import { ChevronRight } from 'lucide-react';
 
 import { ErrorBoundary } from '@/components/error-boundary';
@@ -9,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 
-import { useGetFinancialTransfersScheduledSuspense } from '@/api/generated/react-query/financial';
+import { useGetFinancialTransfersScheduled } from '@/api/generated/react-query/financial';
 
 import { TransferCard } from './transfer-card';
 
@@ -43,7 +41,11 @@ function TransfersSkeleton() {
 }
 
 function ScheduledTransfersContent() {
-  const { data } = useGetFinancialTransfersScheduledSuspense();
+  const { data, isLoading } = useGetFinancialTransfersScheduled();
+
+  if (isLoading) {
+    return <TransfersSkeleton />;
+  }
 
   if (!data?.data?.transfers || data.data.transfers.length === 0) {
     return (
@@ -92,9 +94,7 @@ export const ScheduledTransfersSection = () => {
         </div>
       }
     >
-      <Suspense fallback={<TransfersSkeleton />}>
-        <ScheduledTransfersContent />
-      </Suspense>
+      <ScheduledTransfersContent />
     </ErrorBoundary>
   );
 };

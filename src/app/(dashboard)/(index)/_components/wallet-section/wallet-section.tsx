@@ -1,13 +1,11 @@
 'use client';
 
-import { Suspense } from 'react';
-
 import { Ellipsis } from 'lucide-react';
 
 import { ErrorBoundary } from '@/components/error-boundary';
 import { Skeleton } from '@/components/ui/skeleton';
 
-import { useGetFinancialWalletSuspense } from '@/api/generated/react-query/financial';
+import { useGetFinancialWallet } from '@/api/generated/react-query/financial';
 
 import { WalletCard } from './wallet-card';
 
@@ -28,7 +26,11 @@ function WalletSkeleton() {
 }
 
 function WalletSectionContent() {
-  const { data } = useGetFinancialWalletSuspense();
+  const { data, isLoading } = useGetFinancialWallet();
+
+  if (isLoading) {
+    return <WalletSkeleton />;
+  }
 
   return (
     <div className="animate-fade-in grow space-y-4 opacity-0">
@@ -73,9 +75,7 @@ export const WalletSection = () => {
         </div>
       }
     >
-      <Suspense fallback={<WalletSkeleton />}>
-        <WalletSectionContent />
-      </Suspense>
+      <WalletSectionContent />
     </ErrorBoundary>
   );
 };

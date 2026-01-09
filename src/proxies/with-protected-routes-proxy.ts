@@ -20,6 +20,7 @@ export const withProtectedRoutesProxy: ProxyFactory = (next: NextProxy) => {
   return async (request: NextRequest, _next: NextFetchEvent) => {
     const pathname = request.nextUrl.pathname;
 
+    // Skip middleware for API routes, tRPC, and static files
     if (pathname.startsWith('/api') || pathname.startsWith('/trpc')) {
       return next(request, _next);
     }

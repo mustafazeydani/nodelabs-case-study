@@ -16,9 +16,6 @@ export default defineConfig({
           path: './src/api/mutator/custom-instance.ts',
           name: 'customInstance',
         },
-        query: {
-          useSuspenseQuery: true,
-        },
       },
     },
   },

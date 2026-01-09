@@ -1,7 +1,5 @@
 'use client';
 
-import { Suspense } from 'react';
-
 import { ChevronDown } from 'lucide-react';
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts';
 
@@ -17,7 +15,7 @@ import {
 import { Skeleton } from '@/components/ui/skeleton';
 import { formatCurrency } from '@/lib/utils';
 
-import { useGetFinancialWorkingCapitalSuspense } from '@/api/generated/react-query/financial';
+import { useGetFinancialWorkingCapital } from '@/api/generated/react-query/financial';
 
 const chartConfig = {
   income: {
@@ -61,9 +59,13 @@ function ChartSkeleton() {
 }
 
 function WorkingCapitalChartContent() {
-  const { data } = useGetFinancialWorkingCapitalSuspense();
+  const { data, isLoading } = useGetFinancialWorkingCapital();
 
   const chartData = data?.data?.data;
+
+  if (isLoading) {
+    return <ChartSkeleton />;
+  }
 
   if (!chartData) {
     return (
@@ -167,9 +169,7 @@ export const WorkingCapitalChart = () => {
         </div>
       }
     >
-      <Suspense fallback={<ChartSkeleton />}>
-        <WorkingCapitalChartContent />
-      </Suspense>
+      <WorkingCapitalChartContent />
     </ErrorBoundary>
   );
 };

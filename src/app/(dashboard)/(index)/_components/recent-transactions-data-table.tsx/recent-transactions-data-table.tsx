@@ -1,7 +1,5 @@
 'use client';
 
-import { Suspense } from 'react';
-
 import { ChevronRight } from 'lucide-react';
 
 import { DataTable } from '@/components/data-table';
@@ -9,7 +7,7 @@ import { ErrorBoundary } from '@/components/error-boundary';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-import { useGetFinancialTransactionsRecentSuspense } from '@/api/generated/react-query/financial';
+import { useGetFinancialTransactionsRecent } from '@/api/generated/react-query/financial';
 
 import { columns } from './columns';
 
@@ -34,7 +32,11 @@ function TableSkeletonLoader() {
 }
 
 function RecentTransactionsContent() {
-  const { data } = useGetFinancialTransactionsRecentSuspense({ limit: 5 });
+  const { data, isLoading } = useGetFinancialTransactionsRecent({ limit: 5 });
+
+  if (isLoading) {
+    return <TableSkeletonLoader />;
+  }
 
   return (
     <Card>
@@ -66,9 +68,7 @@ export const RecentTransactionsDataTable = () => {
         </div>
       }
     >
-      <Suspense fallback={<TableSkeletonLoader />}>
-        <RecentTransactionsContent />
-      </Suspense>
+      <RecentTransactionsContent />
     </ErrorBoundary>
   );
 };
