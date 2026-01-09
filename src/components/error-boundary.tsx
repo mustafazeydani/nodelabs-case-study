@@ -5,7 +5,6 @@ import {
   FallbackProps,
 } from 'react-error-boundary';
 
-import { RefreshAccessToken } from './refresh-access-token';
 import { Button } from './ui/button';
 
 function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
@@ -31,9 +30,6 @@ export function ErrorBoundary({
   onError,
 }: ErrorBoundaryProps) {
   const DefaultFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
-    if (error.message === 'Unauthorized' && typeof window !== 'undefined') {
-      return <RefreshAccessToken />;
-    }
     if (fallback) {
       return <>{fallback}</>;
     }
