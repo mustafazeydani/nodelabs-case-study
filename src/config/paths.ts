@@ -1,27 +1,25 @@
+import { CONSTANTS } from './constants';
+
 export const paths = {
   '/': {
     getHref: (): '/' => '/',
     label: 'Dashboard',
   },
   'sign-in': {
-    getHref: ({ redirectTo }: { redirectTo?: string } = {}):
-      | '/sign-in'
-      | `/sign-in?redirectTo=${string}` => {
+    getHref: ({ redirectTo }: { redirectTo?: string } = {}): '/sign-in' => {
       return ('/sign-in' +
-        (redirectTo ? `?redirectTo=${encodeURIComponent(redirectTo)}` : '')) as
-        | '/sign-in'
-        | `/sign-in?redirectTo=${string}`;
+        (redirectTo
+          ? `?${CONSTANTS.redirectToParam}=${encodeURIComponent(redirectTo)}`
+          : '')) as '/sign-in';
     },
     label: 'Sign In',
   },
   'sign-up': {
-    getHref: ({ redirectTo }: { redirectTo?: string } = {}):
-      | '/sign-up'
-      | `/sign-up?redirectTo=${string}` => {
+    getHref: ({ redirectTo }: { redirectTo?: string } = {}): '/sign-up' => {
       return ('/sign-up' +
-        (redirectTo ? `?redirectTo=${encodeURIComponent(redirectTo)}` : '')) as
-        | '/sign-up'
-        | `/sign-up?redirectTo=${string}`;
+        (redirectTo
+          ? `?${CONSTANTS.redirectToParam}=${encodeURIComponent(redirectTo)}`
+          : '')) as '/sign-up';
     },
     label: 'Sign Up',
   },

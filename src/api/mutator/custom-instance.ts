@@ -117,7 +117,9 @@ XIOR_INSTANCE.interceptors.response.use(
           }
 
           // Refresh failed, redirect to login
-          window.location.href = paths['sign-in'].getHref();
+          window.location.href = paths['sign-in'].getHref({
+            redirectTo: window.location.pathname,
+          });
           return Promise.reject(refreshError);
         }
       }
